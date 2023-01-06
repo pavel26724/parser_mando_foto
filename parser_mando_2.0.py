@@ -1,7 +1,8 @@
 import requests
+import os
+from bs4 import BeautifulSoup
 import openpyxl
 import time
-import os
 from time import sleep
 
 _BSDIR = os.path.dirname(os.path.abspath(__file__))
@@ -20,18 +21,18 @@ def parser_mando_foto():
     for x1 in x:
         try:
             r = requests.get(f'https://hlmandoaftermarket.com/product/{x1}')
-            link = str(r.content)
-            # link1 = link.lower()
-            link1 = link.replace(' ', '')
-            if '.jpg' in link1:
-                a = link1.index('.jpg')
-                b = link1.rindex('<imgsrc="', 0, a)
-                c = link1[b + 9: a + 4]
-                o = [x1, c]
+            soup = BeautifulSoup(r.text, 'lxml')
+            soup1 = str(soup).replace(' ', '')
+            picture_d = soup.find('a', class_='product-image-zoom-link')
+
+            if 'product-image-zoom-link' in soup1:
+                picture_watermark = picture_d.find('img').get('src').replace(' ', '')
+                o = [x1, picture_watermark]
                 sheet_rez.append(o)
             else:
                 o = [x1, 'no foto']
                 sheet_rez.append(o)
+
         except TimeoutError or TypeError:
             sleep(10)
 
