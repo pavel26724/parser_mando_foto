@@ -22,7 +22,6 @@ def parser_mando_foto():
         try:
             r = requests.get(f'https://hlmandoaftermarket.com/product/{x1}')
             soup = BeautifulSoup(r.text, 'lxml')
-            soup1 = str(soup).replace(' ', '')
             picture_d = soup.find('a', class_='product-image-zoom-link')
 
             if 'product-image-zoom-link' in soup1:
@@ -41,4 +40,4 @@ def parser_mando_foto():
 
 start_time = time.time()
 parser_mando_foto()
-print(f'отработала за {int(time.time() - start_time)} секунд')
+print(f'отработала за {int(time.time() - start_time)} секунд или {(int(time.time() - start_time)) // 60} минут')
